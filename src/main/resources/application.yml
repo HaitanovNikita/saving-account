@@ -1,0 +1,24 @@
+application:
+  savings-account-controller-api:
+    write-off-amount-by-card-number:
+      url: http://localhost:8080/saving-accounts-controller-api/write-off-amount
+  product-controller-api:
+    get-details-product:
+      url: http://localhost:8080/product-controller-api/get-details-product
+
+logging:
+  level:
+    root: info
+    com.autodealer.autodealerspring: info
+  file:
+    path: /logs      # this path should been redefined on PROD environment
+    name: logs/autodealer_log.log
+    max-history: 60
+    max-size: 30MB
+    clean-history-on-start: false
+    total-size-cap: 1GB
+  pattern:
+    rolling-file-name: logs/Logs/SavingsAccount/file.%d{yyyy-MM-dd_HH}.%i.log.gz
+    #    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight([%-5level]) %cyan(%logger{10}) %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} %-5p %cyan{1}:%L - %m%n'
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [AutoDealer] %highlight([%-5level]) %cyan(%logger{10}) %msg%n'
