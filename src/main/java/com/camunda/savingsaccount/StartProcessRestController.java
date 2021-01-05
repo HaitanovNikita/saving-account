@@ -24,7 +24,7 @@ public class StartProcessRestController {
     public void startProcess(@RequestBody InputData inputData){
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("inputData", inputData);
-        this.processEngine.getRuntimeService().startProcessInstanceByMessage("startSavingsMessage", variables);
+        processEngine.getRuntimeService().startProcessInstanceByMessage("startSavingsMessage", variables);
         log.info("StartProcessRestController");
     }
 

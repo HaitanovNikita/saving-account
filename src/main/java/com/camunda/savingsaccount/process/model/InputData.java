@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 
 @Data
+@Builder
 @RequiredArgsConstructor
 public class InputData {
     private final String cardNumber;
