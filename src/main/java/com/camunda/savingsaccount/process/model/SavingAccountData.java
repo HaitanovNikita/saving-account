@@ -1,10 +1,10 @@
 package com.camunda.savingsaccount.process.model;
 
-import com.sun.istack.internal.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @AllArgsConstructor

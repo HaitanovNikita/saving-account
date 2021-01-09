@@ -10,7 +10,7 @@ import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
-import org.camunda.bpm.engine.test.assertions.ProcessEngineAssertions;
+import org.camunda.bpm.engine.test.assertions.ProcessEngineTests;
 import org.camunda.bpm.engine.test.mock.Mocks;
 import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRuleBuilder;
 import org.junit.Before;
@@ -25,22 +25,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.camunda.bpm.engine.test.assertions.ProcessEngineAssertions.processEngine;
-import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.init;
-import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeService;
+import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.*;
 
-@RunWith(PowerMockRunner.class)
 public class SavingsAccountUnitTest {
 
     @ClassRule
     @Rule
     public static ProcessEngineRule rule = TestCoverageProcessEngineRuleBuilder.create().build();
 
-    private static ProcessEngine processEngine;
+    private ProcessEngine processEngine;
 
     @Before
     public void setupMocks() {
-        init(rule.getProcessEngine());
         processEngine = processEngine();
 
         DetailsProduct detailsProduct = new DetailsProduct();
@@ -71,12 +67,10 @@ public class SavingsAccountUnitTest {
         Map<String, Object> variables = new HashMap<>();
         variables.put("inputData", inputData);
 
-        ProcessInstance processInstance = processEngine.getRuntimeService()
-//                .startProcessInstanceByKey(PROCESS_DEFINITION_KEY, Variables.putValue("startSavingsMessage", variables));
+        ProcessInstance processInstance = runtimeService()
                 .startProcessInstanceByMessage("startSavingsMessage", variables);
 
-        ProcessEngineAssertions
-                .assertThat(processInstance)
+        ProcessEngineTests.assertThat(processInstance)
                 .hasPassedInOrder(
                         "start_process",
                         "details_product"
@@ -91,8 +85,7 @@ public class SavingsAccountUnitTest {
         assertThat(product.getName()).isEqualTo("product-1");
         assertThat(product.getType()).isEqualTo(ProductType.PT_1010);
 
-        ProcessEngineAssertions
-                .assertThat(processInstance)
+        ProcessEngineTests.assertThat(processInstance)
                 .hasPassed(
                         "writing_amount_savings_account"
                 ).task();
