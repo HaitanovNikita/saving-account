@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0kqtkaa" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.3.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0kqtkaa" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
   <bpmn:category id="Category_0v86zv1">
     <bpmn:categoryValue id="CategoryValue_1rgiuci" value="Определение суммы для зачисления на накопительый счет" />
   </bpmn:category>
@@ -64,7 +64,7 @@
     <bpmn:sequenceFlow id="Flow_0drd88n" sourceRef="details_product" targetRef="Gateway_0bj58ci" />
     <bpmn:sequenceFlow id="Flow_0ztn26q" sourceRef="start_process" targetRef="details_product" />
   </bpmn:process>
-  <bpmn:message id="Message_0q7do59" name="Message_2ruqf53" />
+  <bpmn:message id="Message_0q7do59" name="start_process" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0nybacm">
       <bpmndi:BPMNShape id="Participant_0592hei_di" bpmnElement="savings_account" isHorizontal="true">

@@ -68,7 +68,7 @@ public class SavingsAccountUnitTest {
         variables.put("inputData", inputData);
 
         ProcessInstance processInstance = runtimeService()
-                .startProcessInstanceByMessage("startSavingsMessage", variables);
+                .startProcessInstanceByMessage("start_process", variables);
 
         ProcessEngineTests.assertThat(processInstance)
                 .hasPassedInOrder(
