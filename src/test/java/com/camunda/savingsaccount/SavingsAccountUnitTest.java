@@ -7,9 +7,11 @@ import com.camunda.savingsaccount.process.activity.servicetask.DeterminingAmount
 import com.camunda.savingsaccount.process.activity.servicetask.WritingAmountSavingsAccount;
 import com.camunda.savingsaccount.process.model.InputData;
 import com.camunda.savingsaccount.process.model.SavingAccountData;
-import com.camunda.savingsaccount.utils.Utils;
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.runtime.VariableInstance;
+import org.camunda.bpm.engine.runtime.VariableInstanceQuery;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.test.assertions.ProcessEngineTests;
@@ -22,8 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,6 +36,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.processEngine;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeService;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,7 +48,13 @@ public class SavingsAccountUnitTest {
     public static ProcessEngineRule rule = TestCoverageProcessEngineRuleBuilder.create().build();
 
     @Mock
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplateProduct;
+    @Mock
+    private RestTemplate restTemplateWriting;
+    @Mock
+    private ResponseEntity responseEntityProduct;
+    @Mock
+    private ResponseEntity responseEntityWriting;
 
     private ProcessEngine processEngine;
 
@@ -59,10 +67,9 @@ public class SavingsAccountUnitTest {
 
         DetailsProduct detailsProduct = DetailsProduct
                 .builder()
-                .restTemplate(restTemplate)
+                .restTemplate(restTemplateProduct)
                 .getDetailsProductUrl(detailsProductUrl)
                 .build();
-
 
         Mocks.register("detailsProduct", detailsProduct);
 
@@ -71,11 +78,31 @@ public class SavingsAccountUnitTest {
 
         WritingAmountSavingsAccount writingAmountSavingsAccount = WritingAmountSavingsAccount
                 .builder()
-                .restTemplate(restTemplate)
+                .restTemplate(restTemplateWriting)
                 .writeOffAmountByCardNumberUrl(writeOffAmountByCardNumberUrl)
                 .build();
 
         Mocks.register("writingAmountSavingsAccount", writingAmountSavingsAccount);
+
+        when(restTemplateProduct.exchange(anyString(),
+                any(),
+                any(),
+                (Class<Object>) any()))
+                .thenReturn(responseEntityProduct);
+
+        when(responseEntityProduct.getBody()).thenReturn(Product.builder()
+                .productId(UUID.randomUUID())
+                .name("product-1")
+                .type(ProductType.PT_1010)
+                .build());
+
+        when(restTemplateWriting.exchange(anyString(),
+                any(),
+                any(),
+                (Class<Object>) any()))
+                .thenReturn(responseEntityWriting);
+
+        when(responseEntityWriting.getBody()).thenReturn(new BigDecimal(12345));
     }
 
     @Test
@@ -96,18 +123,6 @@ public class SavingsAccountUnitTest {
         Map<String, Object> variables = new HashMap<>();
         variables.put("inputData", inputData);
 
-
-        when(restTemplate.exchange(detailsProductUrl,
-                HttpMethod.GET,
-                new HttpEntity(inputData, Utils.getHttpHeaders()),
-                Product.class))
-                .thenReturn(ResponseEntity
-                        .ok(Product.builder()
-                                .productId(UUID.randomUUID())
-                                .name("product-1")
-                                .type(ProductType.PT_1010)
-                                .build()));
-
         ProcessInstance processInstance = runtimeService()
                 .startProcessInstanceByMessage("start_process", variables);
 
@@ -117,10 +132,8 @@ public class SavingsAccountUnitTest {
                         "details_product"
                 ).task();
 
-        Product product = (Product) runtimeService().createVariableInstanceQuery()
-                .processInstanceIdIn(processInstance.getProcessInstanceId())
-                .variableName("detailsProduct")
-                .singleResult().getValue();
+        Product product = (Product) processEngine.getRuntimeService()
+                .getVariable(processInstance.getProcessInstanceId(), "detailsProduct");
 
         assertThat(product).isNotNull();
         assertThat(product.getName()).isEqualTo("product-1");
@@ -139,12 +152,7 @@ public class SavingsAccountUnitTest {
                 .amountsCreditedSavingsAccount(amountsCreditedSavingsAccount)
                 .build();
 
-        when(restTemplate.exchange(writeOffAmountByCardNumberUrl,
-                HttpMethod.PUT,
-                new HttpEntity(any(), any()),
-                BigDecimal.class))
-                .thenReturn(ResponseEntity
-                        .ok(new BigDecimal(12345)));
+
 
         ProcessEngineTests.assertThat(processInstance)
                 .hasPassed(
