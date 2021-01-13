@@ -6,12 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
 @Builder
 @RequiredArgsConstructor
-public class InputData {
+public class InputData implements Serializable {
     private final String cardNumber;
     private final BigDecimal sum;
 }

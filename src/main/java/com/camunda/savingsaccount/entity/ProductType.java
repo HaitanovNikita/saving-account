@@ -1,5 +1,6 @@
 package com.camunda.savingsaccount.entity;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -7,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum ProductType {
+public enum ProductType implements Serializable {
     PT_1010(1L),
     PT_1020(2L),
     PT_1030(3L),

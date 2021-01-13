@@ -53,13 +53,13 @@
     <bpmn:sequenceFlow id="Flow_1ktiz60" sourceRef="fixed_procent" targetRef="Gateway_1ggs9ti" />
     <bpmn:sequenceFlow id="Flow_1oczwnc" sourceRef="rounding_to_hryvnia" targetRef="Gateway_1ggs9ti" />
     <bpmn:sequenceFlow id="Flow_0gd9rl2" name="Тип продукта - 1" sourceRef="Gateway_0bj58ci" targetRef="rounding_to_hryvnia">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${typeProduct==1}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${typeProduct=='PT_1010'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0xhf22n" name="Тип продукта - 3" sourceRef="Gateway_0bj58ci" targetRef="fixed_sum">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${typeProduct==3}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${typeProduct=='PT_1030'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0efyehl" name="Тип продукта - 2" sourceRef="Gateway_0bj58ci" targetRef="fixed_procent">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${typeProduct==2}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${typeProduct=='PT_1020'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0drd88n" sourceRef="details_product" targetRef="Gateway_0bj58ci" />
     <bpmn:sequenceFlow id="Flow_0ztn26q" sourceRef="start_process" targetRef="details_product" />

@@ -4,16 +4,19 @@ import com.camunda.savingsaccount.config.annotation.Profiling;
 import com.camunda.savingsaccount.entity.Product;
 import com.camunda.savingsaccount.process.model.InputData;
 import com.camunda.savingsaccount.utils.Utils;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 @Slf4j
 @Profiling
 @Component
-public class DeterminingAmount implements JavaDelegate {
+@Builder
+public class DeterminingAmount implements JavaDelegate, Serializable {
 
     private final double fixedProcentWithInputSum = 15;
     private final double fixedSumWithInputSum = 100;

@@ -4,6 +4,7 @@ import com.camunda.savingsaccount.config.annotation.Profiling;
 import com.camunda.savingsaccount.process.model.InputData;
 import com.camunda.savingsaccount.process.model.SavingAccountData;
 import com.camunda.savingsaccount.utils.Utils;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -15,11 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 @Slf4j
 @Profiling
 @Component
-public class WritingAmountSavingsAccount implements JavaDelegate {
+@Builder
+public class WritingAmountSavingsAccount implements JavaDelegate, Serializable {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -54,5 +57,13 @@ public class WritingAmountSavingsAccount implements JavaDelegate {
             delegateExecution.setVariable("statusAmountCreditedBonusAccountErrorMessage", Utils.UN_SUCCESS_ERROR_DESCRIPTION);
             log.error("Execution broken, errors found from amount credited bonus account" );
         }
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public void setWriteOffAmountByCardNumberUrl(String writeOffAmountByCardNumberUrl) {
+        this.writeOffAmountByCardNumberUrl = writeOffAmountByCardNumberUrl;
     }
 }

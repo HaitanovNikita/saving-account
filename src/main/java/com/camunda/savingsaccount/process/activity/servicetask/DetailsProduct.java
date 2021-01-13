@@ -4,6 +4,7 @@ import com.camunda.savingsaccount.config.annotation.Profiling;
 import com.camunda.savingsaccount.entity.Product;
 import com.camunda.savingsaccount.process.model.InputData;
 import com.camunda.savingsaccount.utils.Utils;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -14,13 +15,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.Serializable;
+
 @Slf4j
 @Profiling
 @Component
-public class DetailsProduct implements JavaDelegate {
+@Builder
+public class DetailsProduct implements JavaDelegate, Serializable {
 
     @Value("${application.product-controller-api.get-details-product.url}")
     private String getDetailsProductUrl;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -46,4 +52,11 @@ public class DetailsProduct implements JavaDelegate {
         }
     }
 
+    public void setDetailsProductUrl(String getDetailsProductUrl) {
+        this.getDetailsProductUrl = getDetailsProductUrl;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 }
