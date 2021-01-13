@@ -35,6 +35,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.processEngine;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeService;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -131,7 +132,6 @@ public class SavingsAccountUnitTest {
                 ).task();
 
         BigDecimal amountsCreditedSavingsAccount = (BigDecimal) processEngine.getRuntimeService().getActivityInstance("rounding_to_hryvnia");
-//        .getVariable("amountsCreditedSavingsAccount")
 
         SavingAccountData savingAccountData = SavingAccountData
                 .builder()
@@ -141,7 +141,7 @@ public class SavingsAccountUnitTest {
 
         when(restTemplate.exchange(writeOffAmountByCardNumberUrl,
                 HttpMethod.PUT,
-                new HttpEntity(savingAccountData, Utils.getHttpHeaders()),
+                new HttpEntity(any(), any()),
                 BigDecimal.class))
                 .thenReturn(ResponseEntity
                         .ok(new BigDecimal(12345)));

@@ -46,8 +46,8 @@ public class WritingAmountSavingsAccount implements JavaDelegate, Serializable {
                     HttpMethod.PUT,
                     new HttpEntity(savingAccountData, Utils.getHttpHeaders()),
                     BigDecimal.class);
-
-            delegateExecution.setVariable("AmountCreditedBonusAccount", exchange.getBody());
+            BigDecimal amountByCardNumber = exchange.getBody();
+            delegateExecution.setVariable("AmountCreditedBonusAccount", String.valueOf(amountByCardNumber));
 
             delegateExecution.setVariable("statusAmountCreditedBonusAccountErrorCode", Utils.SUCCESS_ERROR_CODE);
             delegateExecution.setVariable("statusAmountCreditedBonusAccountErrorMessage", Utils.SUCCESS_ERROR_DESCRIPTION);

@@ -39,8 +39,9 @@ public class DetailsProduct implements JavaDelegate, Serializable {
                     HttpMethod.GET,
                     new HttpEntity(inputData, Utils.getHttpHeaders()),
                     Product.class);
-
-            delegateExecution.setVariable("detailsProduct", productResponseEntity.getBody());
+            Product resultProduct = productResponseEntity.getBody();
+            delegateExecution.setVariable("detailsProduct", resultProduct);
+            delegateExecution.setVariable("typeProduct", resultProduct.getType());
 
             delegateExecution.setVariable("statusReceiptDetailsProductErrorCode", Utils.SUCCESS_ERROR_CODE);
             delegateExecution.setVariable("statusReceiptDetailsProductErrorMessage", Utils.SUCCESS_ERROR_DESCRIPTION);
@@ -48,7 +49,7 @@ public class DetailsProduct implements JavaDelegate, Serializable {
         } else {
             delegateExecution.setVariable("statusReceiptDetailsProductErrorCode", Utils.UN_SUCCESS_ERROR_CODE);
             delegateExecution.setVariable("statusReceiptDetailsProductErrorMessage", Utils.UN_SUCCESS_ERROR_DESCRIPTION);
-            log.error("Execution broken, errors found from details product" );
+            log.error("Execution broken, errors found from details product");
         }
     }
 
