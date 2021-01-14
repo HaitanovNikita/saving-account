@@ -132,8 +132,9 @@ public class SavingsAccountUnitTest {
                         "details_product"
                 ).task();
 
-        Product product = (Product) processEngine.getRuntimeService()
-                .getVariable(processInstance.getProcessInstanceId(), "detailsProduct");
+        Product product = (Product) processEngine.getHistoryService()
+                .createHistoricVariableInstanceQuery().processInstanceId(processInstance.getProcessInstanceId())
+                .variableName("detailsProduct").singleResult().getValue();
 
         assertThat(product).isNotNull();
         assertThat(product.getName()).isEqualTo("product-1");
@@ -144,25 +145,16 @@ public class SavingsAccountUnitTest {
                         "rounding_to_hryvnia"
                 ).task();
 
-        BigDecimal amountsCreditedSavingsAccount = (BigDecimal) processEngine.getRuntimeService().getActivityInstance("rounding_to_hryvnia");
-
-        SavingAccountData savingAccountData = SavingAccountData
-                .builder()
-                .cardNumber(inputData.getCardNumber())
-                .amountsCreditedSavingsAccount(amountsCreditedSavingsAccount)
-                .build();
-
-
 
         ProcessEngineTests.assertThat(processInstance)
                 .hasPassed(
                         "writing_amount_savings_account"
                 ).task();
 
-        BigDecimal amountCreditedBonusAccount = (BigDecimal) runtimeService().createVariableInstanceQuery()
-                .processInstanceIdIn(processInstance.getProcessInstanceId())
-                .variableName("AmountCreditedBonusAccount")
-                .singleResult().getValue();
+        BigDecimal amountCreditedBonusAccount = new BigDecimal((String) processEngine.getHistoryService()
+                .createHistoricVariableInstanceQuery().processInstanceId(processInstance.getProcessInstanceId())
+                .variableName("AmountCreditedBonusAccount").singleResult().getValue());
+
 
         assertThat(amountCreditedBonusAccount).isNotNull();
 
